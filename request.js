@@ -1,7 +1,8 @@
 import { getObCache, setObCache } from "./cache";
 import axios from 'axios'
 
-export  const request = async (url, data, cache) => {
+export  const request = async ({url, data, cache, method}) => {
+
     const user = getObCache('user') || {}
     if(false && getObCache(url)) {
         return getObCache(url);
@@ -10,10 +11,9 @@ export  const request = async (url, data, cache) => {
         const res = await axios({
             headers: {
                 'Content-Type': 'application/json',
-                'AppId': appid,
                 'Auth': user.token  
             },
-            method: 'post',
+            method: method || 'post',
             url,
             data,
             transformRequest: [function (data, headers) {
