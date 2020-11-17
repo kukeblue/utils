@@ -1,5 +1,7 @@
 
 
+const wx = window.wx
+
 export function mp_setCache(key, value) {
   try {
     wx.setStorageSync(key, value)
