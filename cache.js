@@ -6,5 +6,8 @@ export const setObCache = (key, value) => {
 }
 
 export const getObCache = (key) => {
-    localStorage.getItem(key)
+    let _ob = localStorage.getItem(key)
+    if(_ob) {
+        return JSON.parse(_ob)
+    }
 }

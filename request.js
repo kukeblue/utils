@@ -1,14 +1,19 @@
 import { getObCache, setObCache } from "./cache";
 import axios from 'axios'
 
-export const request = async({ url, data, cache, method }) => {
+export let options = {
+    afterFetch: () => {
 
-    const user = getObCache('user') || {}
-    if (false && getObCache(url)) {
-        return getObCache(url);
     }
-    try {
-        const res = await axios({
+}
+
+export const request = ({ url, data, cache, method }) => {
+    return new Promise((resolve, reject) => {
+        const user = getObCache('user') || {}
+        if (false && getObCache(url)) {
+            return getObCache(url);
+        }
+        const res = axios({
             headers: {
                 'Content-Type': 'application/json',
                 'Auth': user.token
@@ -26,13 +31,32 @@ export const request = async({ url, data, cache, method }) => {
                 })
                 return JSON.stringify(data);
             }],
-        }).catch(function(error) {
+        }).then(function(response) {
+            console.log(response.data);
+            console.log(response.status);
+            console.log(response.statusText);
+            console.log(response.headers);
+            console.log(response.config);
+            console.log(`【request】 url ${url}`, data, res.data)
+            if (response.data && response.data.status === 0) {
+                setObCache(url, response.data)
+            }
+            if(options.afterFetch) {
+                options.afterFetch(response.data)
+            }
+            resolve(response.data)
+        }).
+        catch(function(error) {
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
                 console.log(error.response.data);
                 console.log(error.response.status);
                 console.log(error.response.headers);
+                if(options.afterFetch) {
+                    options.afterFetch(error.response.data)
+                }
+                resolve(error.response.data)
             } else if (error.request) {
                 // The request was made but no response was received
                 // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -43,15 +67,12 @@ export const request = async({ url, data, cache, method }) => {
                 console.log('Error', error.message);
             }
             console.log(error.config);
-        });;
-        console.log(`【request】 url ${url}`, data, res.data)
-        if (res.data && res.data.status === 0) {
-            setObCache(url, res.data)
-        }
-        return res.data
+            reject(1)
+        }).finally(() => {
+            // reject(0)
+        });
 
-    } catch (error) {
-        console.error(error)
-        return {}
-    }
+        // return res.data
+    })
+
 }
