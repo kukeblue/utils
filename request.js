@@ -7,7 +7,7 @@ export  const request = ({url, data, cache, method}) => {
         if(false && getObCache(url)) {
             return getObCache(url);
         }
-        const res = axios({
+        axios({
             headers: {
                 'Content-Type': 'application/json',
                 'Auth': user.token  
@@ -26,12 +26,15 @@ export  const request = ({url, data, cache, method}) => {
                 return JSON.stringify(data);
             }],
         }).then(function (response) {
-            console.log(response.data);
-            console.log(response.status);
-            console.log(response.statusText);
-            console.log(response.headers);
-            console.log(response.config);
-            console.log(`【request】 url ${url}`, data, res.data)
+            // console.log(response.data);
+            // console.log(response.status);
+            // console.log(response.statusText);
+            // console.log(response.headers);
+            // console.log(response.config);
+            console.log(`【REQUEST SUCCESS】 访问地址:${url}`)
+            console.log(`【REQUEST SUCCESS】 请求参数:`,data)
+            console.log(`【REQUEST SUCCESS】 返回结果:`, response.data)
+            
             if(response.data && response.data.status === 0) {
                 setObCache(url, response.data)
             }
@@ -41,9 +44,9 @@ export  const request = ({url, data, cache, method}) => {
             if (error.response) {
               // The request was made and the server responded with a status code
               // that falls out of the range of 2xx
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
+            //   console.log(error.response.data);
+            //   console.log(error.response.status);
+            //   console.log(error.response.headers);
             } else if (error.request) {
               // The request was made but no response was received
               // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -54,9 +57,9 @@ export  const request = ({url, data, cache, method}) => {
               console.log('Error', error.message);
             }
             console.log(error.config);
-            reject(1)
+            reject(error)
         }).finally(()=>{
-            // reject(0)
+            // reject('请求超时!')
         });
        
         // return res.data
