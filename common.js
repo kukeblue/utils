@@ -154,14 +154,14 @@ const utils = {
     },
 
     async wxloginHandle({activity_id}) {
-        let split = location.href.split('/')
+        let split = window.location.href.split('/')
         let path = split[split.length - 1] 
         let state = activity_id + '_' + path
-        const host = location.host
+        const host = window.location.host
         const redirect_uri = process.env.redirectUrl + `?source=${window.btoa(host)}`
         const authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxb0dabea65eb9d7ac&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_userinfo&state=${state}#wechat_redirect`
         console.log('authUrl',authUrl)
-        location.href = authUrl
+        window.location.href = authUrl
     }
 }
 

@@ -1,13 +1,20 @@
 import { getObCache, setObCache } from "./cache";
 import axios from 'axios'
 
-export  const request = ({url, data, cache, method}) => {
+// 默认配置
+export const RequestConfig = {
+    config: {},
+    onRequest: null,  // 请求数据格式化
+}
+
+export const request = ({url, data, cache, method}) => {
     return new Promise((resolve, reject)=>{
         const user = getObCache('user') || {}
         if(false && getObCache(url)) {
             return getObCache(url);
         }
-        axios({
+        
+        const config = {
             headers: {
                 'Content-Type': 'application/json',
                 'Auth': user.token  
@@ -23,9 +30,15 @@ export  const request = ({url, data, cache, method}) => {
                         delete data[key]
                     }
                 })
-                return JSON.stringify(data);
+                if(RequestConfig.onRequest) {
+                    return RequestConfig.onRequest(data)
+                }else {
+                    return JSON.stringify(data);
+                }
             }],
-        }).then(function (response) {
+        }
+        Object.assign(config, RequestConfig.config)
+        axios(config).then(function (response) {
             // console.log(response.data);
             // console.log(response.status);
             // console.log(response.statusText);

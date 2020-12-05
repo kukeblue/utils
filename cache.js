@@ -11,3 +11,7 @@ export const getObCache = (key) => {
         return JSON.parse(_ob)
     }
 }
+
+export const clearObCache = (key) => {
+    localStorage.setItem(key, null)
+}
