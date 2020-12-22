@@ -75,3 +75,9 @@ export const request = ({url, data, cache, method}) => {
     })
     
 }
+
+
+export default Ajax = {
+    RequestConfig,
+    request,
+}
