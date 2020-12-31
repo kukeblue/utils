@@ -1,5 +1,7 @@
 import Ajax from './request'
 
-export default Utils = {
-    Ajax
+const ChUtils = {
+    ...Ajax
 }
+
+export default ChUtils;

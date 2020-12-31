@@ -10,10 +10,9 @@ export const RequestConfig = {
 export const request = ({url, data, cache, method}) => {
     return new Promise((resolve, reject)=>{
         const user = getObCache('user') || {}
-        if(false && getObCache(url)) {
+        if(cache && getObCache(url)) {
             return getObCache(url);
         }
-        
         const config = {
             headers: {
                 'Content-Type': 'application/json',
@@ -54,30 +53,30 @@ export const request = ({url, data, cache, method}) => {
             resolve(response.data)
         }).
         catch(function (error) {
+            console.error('ERROR: 请求异常 ！')
             if (error.response) {
               // The request was made and the server responded with a status code
               // that falls out of the range of 2xx
-            //   console.log(error.response.data);
-            //   console.log(error.response.status);
-            //   console.log(error.response.headers);
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
             } else if (error.request) {
-              console.log(error.request);
+              console.error('ERROR: 请求失败 ',error);
             } else {
-              console.log('Error', error.message);
+              console.error('ERROR: 请求失败', error);
             }
-            console.log(error.config);
             reject(error)
         }).finally(()=>{
             // reject('请求超时!')
         });
-       
-        // return res.data
     })
     
 }
 
 
-export default Ajax = {
+const Ajax = {
     RequestConfig,
     request,
 }
+
+export default Ajax

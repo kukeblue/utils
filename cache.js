@@ -1,6 +1,3 @@
-const { mp_setCache } = require("./wechatmp/cache");
-
-
 export const setObCache = (key, value) => {
     localStorage.setItem(key, JSON.stringify(value))
 }
